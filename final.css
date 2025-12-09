@@ -11,9 +11,7 @@
     --body-bg: #e8f0fa;
     --text-color: #333333;
 }
-.suggestion-item {
-    color: var(--text-color);
-}
+
 [data-theme="dark"] {
     --primary: #62b2f8;
     --secondary: #32629a;
@@ -153,7 +151,7 @@ body {
 
 
 /* ================= MERT GUNES'S CODE STARTS HERE ================= */
-[data-theme="dark"] .suggestion-item {
+[data-theme="dark"] .ion-item {
     color: white !important;
 }
 
@@ -237,6 +235,7 @@ footer {
     padding: 10px;
     cursor: pointer;
     border-bottom: 1px solid #eee;
+    color: var(--text-color);
 }
 
 .suggestion-item:hover {
@@ -257,5 +256,6 @@ footer {
     }
 }
 /* ================= ZANI THAQI'S CODE ENDS HERE ================= */
+
 
 
