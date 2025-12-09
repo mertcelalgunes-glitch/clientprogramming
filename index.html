@@ -15,6 +15,7 @@
 </head>
 
 <!-- ================= ELJONA SALIHU'S CODE STARTS HERE ================= -->
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
@@ -296,7 +297,7 @@
         let temperatureChart, humidityChart, windChart;
         let debounceTimer;
 
-        
+
         searchBtn.addEventListener('click', searchWeather);
         cityInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
@@ -371,7 +372,6 @@
                 item.addEventListener('click', () => {
                     cityInput.value = `${city.name}, ${city.country}`;
                     suggestions.style.display = 'none';
-                    searchWeather();
                 });
                 suggestions.appendChild(item);
             });
@@ -443,6 +443,7 @@
                     return response.json();
                 })
                 .then(data => {
+
                     displayWeatherData(data, city);
                     addToRecentSearches(city);
                     setLoadingState(false);
@@ -748,10 +749,10 @@
 
         function getWeatherIcon(code) {
             switch (code) {
-                case 0: return '<i class="fas fa-sun"></i>';
-                case 1: return '<i class="fas fa-cloud-sun"></i>';
-                case 2: return '<i class="fas fa-cloud"></i>';
-                case 3: return '<i class="fas fa-cloud-showers-heavy"></i>';
+                case 0: return '<i class="fas fa-sun text-warning"></i>';
+                case 1: return '<i class="fas fa-cloud-sun text-warning"></i>';
+                case 2: return '<i class="fas fa-cloud text-secondary"></i>';
+                case 3: return '<i class="fas fa-cloud-showers-heavy text-primary"></i>';
                 default: return '<i class="fas fa-question"></i>';
             }
         }
@@ -792,14 +793,14 @@
 
             recentSearches.innerHTML = '';
             recentCities.forEach(city => {
-                const btn = document.createElement('button');
-                btn.className = 'btn btn-sm btn-outline-light me-2 mb-2';
-                btn.textContent = city;
-                btn.addEventListener('click', () => {
+                const span = document.createElement('span');
+                span.className = 'recent-search';
+                span.textContent = city;
+                span.addEventListener('click', () => {
                     cityInput.value = city;
                     searchWeather();
                 });
-                recentSearches.appendChild(btn);
+                recentSearches.appendChild(span);
             });
             recentSearchesContainer.style.display = 'block';
         }
