@@ -11,7 +11,9 @@
     --body-bg: #e8f0fa;
     --text-color: #333333;
 }
-
+.suggestion-item {
+    color: var(--text-color);
+}
 [data-theme="dark"] {
     --primary: #62b2f8;
     --secondary: #32629a;
@@ -255,4 +257,5 @@ footer {
     }
 }
 /* ================= ZANI THAQI'S CODE ENDS HERE ================= */
+
 
