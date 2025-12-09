@@ -151,6 +151,9 @@ body {
 
 
 /* ================= MERT GUNES'S CODE STARTS HERE ================= */
+[data-theme="dark"] .suggestion-item {
+    color: white !important;
+}
 
 .chart-container {
     position: relative;
@@ -252,3 +255,4 @@ footer {
     }
 }
 /* ================= ZANI THAQI'S CODE ENDS HERE ================= */
+
