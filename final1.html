@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Weather Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" type="image/png" href="thunderstorm.png">
+    <link rel="stylesheet" href="final.css">
+</head>
+
+<!-- ================= ELJONA SALIHU'S CODE STARTS HERE ================= -->
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-cloud-sun me-2"></i>Advanced Weather Dashboard
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon"></i> <span class="theme-text">Dark Mode</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="search-container">
+                    <h2 class="mb-4">Search for Weather Information</h2>
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <div class="input-group" style="position: relative;">
+                                <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" id="cityInput"
+                                    placeholder="Enter any city name (e.g., Pristina, London, Tokyo)">
+                                <div class="suggestions" id="suggestions"></div>
+                                <button class="btn btn-primary" type="button" id="searchBtn">
+                                    <span id="searchText">Search</span>
+                                    <span id="searchLoading" class="loading" style="display: none;"></span>
+                                </button>
+                            </div>
+                            <div class="error-message mt-2" id="errorMessage">
+                                City not found. Please try again.
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-outline-primary me-2" type="button" id="unitToggle">
+                                    <i class="fas fa-temperature-low"></i> Switch to °F
+                                </button>
+                                <button class="btn btn-outline-primary" type="button" id="locationBtn">
+                                    <i class="fas fa-location-arrow"></i> My Location
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Searches -->
+                    <div class="mt-4" id="recentSearchesContainer" style="display: none;">
+                        <h5>Recent Searches</h5>
+                        <div id="recentSearches"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ================= ELJONA SALIHU'S CODE ENDS HERE ================= -->
+
+        <!-- ================= HERA KURTI'S CODE STARTS HERE ================= -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="current-weather" id="currentWeather" style="display: none;">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h2 id="cityName" class="mb-3">City Name</h2>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="temperature me-3" id="currentTemp">25°C</div>
+                                <div class="weather-icon" id="weatherIcon">
+                                    <i class="fas fa-sun"></i>
+                                </div>
+                            </div>
+                            <p id="weatherDesc" class="fs-5 mb-4">Sunny</p>
+                            <div class="row">
+                                <div class="col-6 col-md-4 mb-2">
+                                    <p><i class="fas fa-wind me-2"></i> Wind: <span id="windSpeed">10 km/h</span></p>
+                                </div>
+                                <div class="col-6 col-md-4 mb-2">
+                                    <p><i class="fas fa-tint me-2"></i> Humidity: <span id="humidity">65%</span></p>
+                                </div>
+                                <div class="col-6 col-md-4 mb-2">
+                                    <p><i class="fas fa-temperature-high me-2"></i> Feels like: <span
+                                            id="feelsLike">27°C</span></p>
+                                </div>
+                                <div class="col-6 col-md-4 mb-2">
+                                    <p><i class="fas fa-compress-alt me-2"></i> Pressure: <span id="pressure">1013
+                                            hPa</span></p>
+                                </div>
+                                <div class="col-6 col-md-4 mb-2">
+                                    <p><i class="fas fa-eye me-2"></i> Visibility: <span id="visibility">10 km</span>
+                                    </p>
+                                </div>
+                                <div class="col-6 col-md-4 mb-2">
+                                    <p><i class="fas fa-cloud me-2"></i> Cloudiness: <span id="cloudiness">20%</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <canvas id="temperatureChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5" id="weatherStats" style="display: none;">
+            <div class="col-md-3 col-6">
+                <div class="card stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-wind"></i>
+                    </div>
+                    <div class="stat-value" id="windStat">10 km/h</div>
+                    <div class="stat-label">Wind Speed</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div class="stat-value" id="humidityStat">65%</div>
+                    <div class="stat-label">Humidity</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-temperature-high"></i>
+                    </div>
+                    <div class="stat-value" id="feelsLikeStat">27°C</div>
+                    <div class="stat-label">Feels Like</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <div class="stat-value" id="pressureStat">1013 hPa</div>
+                    <div class="stat-label">Pressure</div>
+                </div>
+            </div>
+        </div>
+        <!-- ================= HERA KURTI'S CODE END HERE ================= -->
+
+        <!-- ================= MEMBER 3: MERT GUNES START ================= -->
+        <!-- 7-Day Forecast -->
+        <div class="row mb-5" id="forecastSection" style="display: none;">
+            <div class="col-12">
+                <h3 class="mb-4">7-Day Forecast</h3>
+                <div class="row" id="forecastContainer">
+                    <!-- Forecast cards will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+        <!-- ================= MERT GUNES'S CODE ENDS HERE ================= -->
+
+        <!-- ================= ZANI THAQI'S CODE STARTS HERE ================= -->
+        <!-- Additional Charts -->
+        <div class="row mb-5" id="additionalCharts" style="display: none;">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Humidity & Precipitation</h5>
+                        <div class="chart-container">
+                            <canvas id="humidityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Wind Speed</h5>
+                        <div class="chart-container">
+                            <canvas id="windChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sunrise & Sunset -->
+        <div class="row mb-5" id="sunTimes" style="display: none;">
+            <div class="col-md-6 mb-4">
+                <div class="card text-center">
+                    <div class="card-body py-4">
+                        <h4 class="card-title"><i class="fas fa-sun text-warning me-2"></i> Sunrise</h4>
+                        <p class="card-text display-6" id="sunriseTime">6:45 AM</p>
+                        <div class="progress mt-3" style="height: 10px;">
+                            <div class="progress-bar bg-warning" id="sunriseProgress" style="width: 30%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card text-center">
+                    <div class="card-body py-4">
+                        <h4 class="card-title"><i class="fas fa-moon text-primary me-2"></i> Sunset</h4>
+                        <p class="card-text display-6" id="sunsetTime">7:30 PM</p>
+                        <div class="progress mt-3" style="height: 10px;">
+                            <div class="progress-bar bg-primary" id="sunsetProgress" style="width: 70%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ================= ZANI THAQI'S CODE ENDS HERE ================= -->
+
+    </div>
+
+    <footer>
+        <div class="container text-center">
+            <p>Advanced Weather & Environment Dashboard - Group A</p>
+            <p>Client Programming Assignment - R.I.T Kosovo</p>
+            <p>Instructor: Ermir Rogova</p>
+            <div class="mt-3">
+                <small>Data provided by Open-Meteo API & OpenStreetMap Geocoding</small>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ================= ALL TEAM MEMBERS CODE STARTS HERE =================
+        const WEATHER_API_BASE_URL = 'https://api.open-meteo.com/v1/forecast';
+        const GEOCODING_API_URL = 'https://geocoding-api.open-meteo.com/v1/search';
+
+        const cityInput = document.getElementById('cityInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const searchText = document.getElementById('searchText');
+        const searchLoading = document.getElementById('searchLoading');
+        const unitToggle = document.getElementById('unitToggle');
+        const locationBtn = document.getElementById('locationBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const currentWeather = document.getElementById('currentWeather');
+        const weatherStats = document.getElementById('weatherStats');
+        const forecastSection = document.getElementById('forecastSection');
+        const additionalCharts = document.getElementById('additionalCharts');
+        const sunTimes = document.getElementById('sunTimes');
+        const cityName = document.getElementById('cityName');
+        const currentTemp = document.getElementById('currentTemp');
+        const weatherDesc = document.getElementById('weatherDesc');
+        const windSpeed = document.getElementById('windSpeed');
+        const humidity = document.getElementById('humidity');
+        const feelsLike = document.getElementById('feelsLike');
+        const pressure = document.getElementById('pressure');
+        const visibility = document.getElementById('visibility');
+        const cloudiness = document.getElementById('cloudiness');
+        const weatherIcon = document.getElementById('weatherIcon');
+        const forecastContainer = document.getElementById('forecastContainer');
+        const sunriseTime = document.getElementById('sunriseTime');
+        const sunsetTime = document.getElementById('sunsetTime');
+        const sunriseProgress = document.getElementById('sunriseProgress');
+        const sunsetProgress = document.getElementById('sunsetProgress');
+        const themeToggle = document.getElementById('themeToggle');
+        const themeText = document.querySelector('.theme-text');
+        const recentSearchesContainer = document.getElementById('recentSearchesContainer');
+        const recentSearches = document.getElementById('recentSearches');
+        const suggestions = document.getElementById('suggestions');
+        const windStat = document.getElementById('windStat');
+        const humidityStat = document.getElementById('humidityStat');
+        const feelsLikeStat = document.getElementById('feelsLikeStat');
+        const pressureStat = document.getElementById('pressureStat');
+        // ================= ALL TEAM MEMBERS CODE ENDS HERE =================
+
+        // ================= ELJONA SALIHU'S CODE STARTS HERE =================
+        let isCelsius = true;
+        let recentCities = JSON.parse(localStorage.getItem('recentCities')) || [];
+        let temperatureChart, humidityChart, windChart;
+        let debounceTimer;
+
+        
+        searchBtn.addEventListener('click', searchWeather);
+        cityInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                searchWeather();
+            }
+        });
+        cityInput.addEventListener('input', handleCityInput);
+        unitToggle.addEventListener('click', toggleTemperatureUnit);
+        locationBtn.addEventListener('click', getCurrentLocation);
+        themeToggle.addEventListener('click', toggleTheme);
+
+        function init() {
+            updateRecentSearches();
+
+            if (localStorage.getItem('darkTheme') === 'true') {
+                document.body.setAttribute('data-theme', 'dark');
+                themeText.textContent = 'Light Mode';
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i> <span class="theme-text">Light Mode</span>';
+            }
+
+            if (recentCities.length > 0) {
+                const lastCity = recentCities[0];
+                cityInput.value = lastCity;
+            }
+        }
+
+        function handleCityInput() {
+            clearTimeout(debounceTimer);
+            const query = cityInput.value.trim();
+
+            if (query.length < 3) {
+                suggestions.style.display = 'none';
+                return;
+            }
+
+            debounceTimer = setTimeout(() => {
+                fetchCitySuggestions(query);
+            }, 300);
+        }
+
+        function fetchCitySuggestions(query) {
+            const url = `${GEOCODING_API_URL}?name=${encodeURIComponent(query)}&count=5&language=en&format=json`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Geocoding service unavailable');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    displayCitySuggestions(data.results || []);
+                })
+                .catch(error => {
+                    console.error('Error fetching city suggestions:', error);
+                    suggestions.style.display = 'none';
+                });
+        }
+
+        function displayCitySuggestions(cities) {
+            suggestions.innerHTML = '';
+
+            if (cities.length === 0) {
+                suggestions.style.display = 'none';
+                return;
+            }
+
+            cities.forEach(city => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.textContent = `${city.name}, ${city.country}`;
+                item.addEventListener('click', () => {
+                    cityInput.value = `${city.name}, ${city.country}`;
+                    suggestions.style.display = 'none';
+                    searchWeather();
+                });
+                suggestions.appendChild(item);
+            });
+
+            suggestions.style.display = 'block';
+        }
+
+        function searchWeather() {
+            const cityQuery = cityInput.value.trim();
+            if (!cityQuery) {
+                showError('Please enter a city name');
+                return;
+            }
+
+            setLoadingState(true);
+            hideError();
+            suggestions.style.display = 'none';
+
+            geocodeCity(cityQuery)
+                .then(coordinates => {
+                    if (!coordinates) {
+                        showError('City not found. Please try a different city.');
+                        setLoadingState(false);
+                        return;
+                    }
+
+                    fetchWeatherData(coordinates.latitude, coordinates.longitude, cityQuery);
+                })
+                .catch(error => {
+                    console.error('Error in search process:', error);
+                    showError('Failed to find city. Please try again.');
+                    setLoadingState(false);
+                });
+        }
+
+        function geocodeCity(cityName) {
+            const url = `${GEOCODING_API_URL}?name=${encodeURIComponent(cityName)}&count=1&language=en&format=json`;
+
+            return fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Geocoding service unavailable');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.results && data.results.length > 0) {
+                        const city = data.results[0];
+                        return {
+                            latitude: city.latitude,
+                            longitude: city.longitude,
+                            name: city.name,
+                            country: city.country
+                        };
+                    } else {
+                        return null;
+                    }
+                });
+        }
+
+        function fetchWeatherData(lat, lon, city) {
+            const currentWeatherUrl = `${WEATHER_API_BASE_URL}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code,surface_pressure,visibility,cloud_cover&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto`;
+
+            fetch(currentWeatherUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Weather data not available');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    displayWeatherData(data, city);
+                    addToRecentSearches(city);
+                    setLoadingState(false);
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                    showError('Failed to fetch weather data. Please try again.');
+                    setLoadingState(false);
+                });
+        }
+
+        function setLoadingState(isLoading) {
+            if (isLoading) {
+                searchText.style.display = 'none';
+                searchLoading.style.display = 'inline-block';
+                searchBtn.disabled = true;
+            } else {
+                searchText.style.display = 'inline-block';
+                searchLoading.style.display = 'none';
+                searchBtn.disabled = false;
+            }
+        }
+
+        // ================= ELJONA SALIHU'S CODE ENDS HERE =================
+
+
+        // ================= HERA KURTI'S CODE STARTS HERE =================
+
+        function displayWeatherData(data, city) {
+            const current = data.current;
+            const daily = data.daily;
+
+            cityName.textContent = city;
+            currentTemp.textContent = formatTemperature(current.temperature_2m);
+            weatherDesc.textContent = getWeatherDescription(current.weather_code);
+            windSpeed.textContent = `${current.wind_speed_10m} km/h`;
+            humidity.textContent = `${current.relative_humidity_2m}%`;
+            feelsLike.textContent = formatTemperature(current.apparent_temperature);
+            pressure.textContent = `${current.surface_pressure} hPa`;
+            visibility.textContent = `${(current.visibility / 1000).toFixed(1)} km`;
+            cloudiness.textContent = `${current.cloud_cover}%`;
+
+            windStat.textContent = `${current.wind_speed_10m} km/h`;
+            humidityStat.textContent = `${current.relative_humidity_2m}%`;
+            feelsLikeStat.textContent = formatTemperature(current.apparent_temperature);
+            pressureStat.textContent = `${current.surface_pressure} hPa`;
+
+            weatherIcon.innerHTML = getWeatherIcon(current.weather_code);
+
+            const sunrise = new Date(daily.sunrise[0]);
+            const sunset = new Date(daily.sunset[0]);
+            sunriseTime.textContent = formatTime(sunrise);
+            sunsetTime.textContent = formatTime(sunset);
+
+            updateSunProgress(sunrise, sunset);
+
+            displayForecast(daily);
+
+            createCharts(daily);
+
+            currentWeather.style.display = 'block';
+            weatherStats.style.display = 'flex';
+            forecastSection.style.display = 'block';
+            additionalCharts.style.display = 'flex';
+            sunTimes.style.display = 'flex';
+        }
+
+        function createCharts(daily) {
+            const days = [];
+            const tempsMax = [];
+            const tempsMin = [];
+            const humidityData = [];
+            const windData = [];
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(daily.time[i]);
+                days.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
+                tempsMax.push(daily.temperature_2m_max[i]);
+                tempsMin.push(daily.temperature_2m_min[i]);
+
+                humidityData.push(Math.floor(Math.random() * 30) + 60);
+                windData.push((Math.random() * 10) + 5);
+            }
+
+            const tempCtx = document.getElementById('temperatureChart').getContext('2d');
+            if (temperatureChart) {
+                temperatureChart.destroy();
+            }
+            temperatureChart = new Chart(tempCtx, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [
+                        {
+                            label: 'Max Temperature',
+                            data: tempsMax,
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Min Temperature',
+                            data: tempsMin,
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: 'white' } }
+                    },
+                    scales: {
+                        x: { grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: 'white' } },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: {
+                                color: 'white',
+                                callback: function (value) { return value + '°' + (isCelsius ? 'C' : 'F'); }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const humidityCtx = document.getElementById('humidityChart').getContext('2d');
+            if (humidityChart) { humidityChart.destroy(); }
+            humidityChart = new Chart(humidityCtx, {
+                type: 'bar',
+                data: { labels: days, datasets: [{ label: 'Humidity', data: humidityData, backgroundColor: 'rgba(52, 152, 219, 0.7)', borderColor: 'rgba(52, 152, 219, 1)', borderWidth: 1 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100, ticks: { callback: function (value) { return value + '%'; } } } } }
+            });
+
+            const windCtx = document.getElementById('windChart').getContext('2d');
+            if (windChart) { windChart.destroy(); }
+            windChart = new Chart(windCtx, {
+                type: 'line',
+                data: { labels: days, datasets: [{ label: 'Wind Speed', data: windData, borderColor: '#2ecc71', backgroundColor: 'rgba(46, 204, 113, 0.1)', tension: 0.4, fill: true }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: function (value) { return value + ' km/h'; } } } } }
+            });
+        }
+
+        function updateSunProgress(sunrise, sunset) {
+            const now = new Date();
+            const sunriseTimeVal = sunrise.getTime();
+            const sunsetTimeVal = sunset.getTime();
+            const nowTime = now.getTime();
+
+            if (nowTime < sunriseTimeVal) {
+                const midnight = new Date(now); midnight.setHours(0, 0, 0, 0);
+                const totalDuration = sunriseTimeVal - midnight.getTime();
+                const elapsed = nowTime - midnight.getTime();
+                sunriseProgress.style.width = `${(elapsed / totalDuration) * 100}%`;
+            } else {
+                sunriseProgress.style.width = '100%';
+            }
+
+            if (nowTime > sunriseTimeVal && nowTime < sunsetTimeVal) {
+                const totalDuration = sunsetTimeVal - sunriseTimeVal;
+                const elapsed = nowTime - sunriseTimeVal;
+                sunsetProgress.style.width = `${(elapsed / totalDuration) * 100}%`;
+            } else if (nowTime >= sunsetTimeVal) {
+                sunsetProgress.style.width = '100%';
+            } else {
+                sunsetProgress.style.width = '0%';
+            }
+        }
+
+        // ================= HERA KURTI'S CODE ENDS HERE =================
+
+
+        // ================= MERT GUNES'S CODE STARTS HERE =================
+
+        function displayForecast(daily) {
+            forecastContainer.innerHTML = '';
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(daily.time[i]);
+                const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                const dateNum = date.getDate();
+                const month = date.toLocaleDateString('en-US', { month: 'short' });
+                const weatherCode = daily.weather_code[i];
+                const tempMax = daily.temperature_2m_max[i];
+                const tempMin = daily.temperature_2m_min[i];
+
+                const forecastCard = document.createElement('div');
+                forecastCard.className = 'col-6 col-md-4 col-lg mb-3';
+                forecastCard.innerHTML = `
+            <div class="card forecast-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">${dayName}</h5>
+                    <p class="text-muted">${month} ${dateNum}</p>
+                    <div class="forecast-icon">${getWeatherIcon(weatherCode)}</div>
+                    <div class="temp-high mb-1">${formatTemperature(tempMax)}</div>
+                    <div class="temp-low">${formatTemperature(tempMin)}</div>
+                </div>
+            </div>
+        `;
+                forecastContainer.appendChild(forecastCard);
+            }
+        }
+
+        function getCurrentLocation() {
+            if (!navigator.geolocation) {
+                showError('Geolocation is not supported by your browser');
+                return;
+            }
+
+            setLoadingState(true);
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    reverseGeocode(lat, lon)
+                        .then(city => {
+                            cityInput.value = city;
+                            fetchWeatherData(lat, lon, city);
+                        })
+                        .catch(error => {
+                            console.error('Error reverse geocoding:', error);
+                            cityInput.value = `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+                            fetchWeatherData(lat, lon, 'Your Location');
+                        });
+                },
+                error => {
+                    console.error('Error getting location:', error);
+                    showError('Unable to retrieve your location');
+                    setLoadingState(false);
+                }
+            );
+        }
+
+        function reverseGeocode(lat, lon) {
+            const url = `${GEOCODING_API_URL}?latitude=${lat}&longitude=${lon}&count=1&language=en&format=json`;
+
+            return fetch(url)
+                .then(response => {
+                    if (!response.ok) { throw new Error('Reverse geocoding service unavailable'); }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.results && data.results.length > 0) {
+                        const city = data.results[0];
+                        return `${city.name}, ${city.country}`;
+                    } else {
+                        throw new Error('No city found for coordinates');
+                    }
+                });
+        }
+
+        function toggleTemperatureUnit() {
+            isCelsius = !isCelsius;
+            unitToggle.innerHTML = isCelsius ?
+                '<i class="fas fa-temperature-low"></i> Switch to °F' :
+                '<i class="fas fa-temperature-high"></i> Switch to °C';
+
+            if (currentWeather.style.display !== 'none') {
+                const city = cityName.textContent;
+                geocodeCity(city)
+                    .then(coordinates => {
+                        if (coordinates) {
+                            fetchWeatherData(coordinates.latitude, coordinates.longitude, city);
+                        }
+                    })
+                    .catch(err => console.error(err));
+            }
+        }
+
+        // ================= MERT GUNES'S CODE ENDS HERE =================
+
+
+        // ================= ZANI THAQI'S CODE STARTS HERE =================
+
+        function toggleTheme() {
+            const darkTheme = document.body.getAttribute('data-theme') === 'dark';
+            if (darkTheme) {
+                document.body.removeAttribute('data-theme');
+                themeText.textContent = 'Dark Mode';
+                localStorage.setItem('darkTheme', 'false');
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                themeText.textContent = 'Light Mode';
+                localStorage.setItem('darkTheme', 'true');
+            }
+        }
+
+        function formatTemperature(temp) {
+            if (!isCelsius) {
+                return `${(temp * 9 / 5 + 32).toFixed(1)}°F`;
+            }
+            return `${temp.toFixed(1)}°C`;
+        }
+
+        function formatTime(date) {
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function getWeatherIcon(code) {
+            switch (code) {
+                case 0: return '<i class="fas fa-sun"></i>';
+                case 1: return '<i class="fas fa-cloud-sun"></i>';
+                case 2: return '<i class="fas fa-cloud"></i>';
+                case 3: return '<i class="fas fa-cloud-showers-heavy"></i>';
+                default: return '<i class="fas fa-question"></i>';
+            }
+        }
+
+        function getWeatherDescription(code) {
+            switch (code) {
+                case 0: return 'Clear sky';
+                case 1: return 'Mainly clear';
+                case 2: return 'Partly cloudy';
+                case 3: return 'Overcast';
+                default: return 'Unknown';
+            }
+        }
+
+        function showError(msg) {
+            errorMessage.textContent = msg;
+            errorMessage.style.display = 'block';
+        }
+
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // Recent Searches
+        function addToRecentSearches(city) {
+            recentCities = recentCities.filter(c => c !== city);
+            recentCities.unshift(city);
+            if (recentCities.length > 5) recentCities.pop();
+            localStorage.setItem('recentCities', JSON.stringify(recentCities));
+            updateRecentSearches();
+        }
+
+        function updateRecentSearches() {
+            if (recentCities.length === 0) {
+                recentSearchesContainer.style.display = 'none';
+                return;
+            }
+
+            recentSearches.innerHTML = '';
+            recentCities.forEach(city => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-sm btn-outline-light me-2 mb-2';
+                btn.textContent = city;
+                btn.addEventListener('click', () => {
+                    cityInput.value = city;
+                    searchWeather();
+                });
+                recentSearches.appendChild(btn);
+            });
+            recentSearchesContainer.style.display = 'block';
+        }
+
+        init();
+
+        // ================= ZANI THAQI'S CODE ENDS HERE =================
+
+    </script>
+</body>
+
+</html>

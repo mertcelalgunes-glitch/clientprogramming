@@ -1,0 +1,254 @@
+/* ================= ELJONA SALIHU'S CODE STARTS HERE ================= */
+:root {
+    --primary: #5A9AC6;
+    --secondary: #20699C;
+    --success: #2ecc71;
+    --warning: #f39c12;
+    --danger: #e74c3c;
+    --light: #ecf0f1;
+    --dark: #2c3e50;
+    --card-bg: #ffffff;
+    --body-bg: #e8f0fa;
+    --text-color: #333333;
+}
+
+[data-theme="dark"] {
+    --primary: #62b2f8;
+    --secondary: #32629a;
+    --success: #43a047;
+    --warning: #ffb300;
+    --danger: #e53935;
+    --light: #37474f;
+    --dark: #0d1117;
+    --card-bg: #1e293b;
+    --body-bg: #0f172a;
+    --text-color: #e2e8f0;
+}
+
+body {
+    background-color: var(--body-bg);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.navbar {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.current-weather {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.weather-icon {
+    font-size: 5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.temperature {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1;
+}
+/* ================= ELJONA SALIHU'S CODE ENDS HERE ================= */
+
+
+/* ================= HERA KURTI'S CODE STARTS HERE ================= */
+
+.forecast-card {
+    text-align: center;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.forecast-card:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.forecast-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.temp-high {
+    color: var(--danger);
+    font-weight: bold;
+}
+
+.temp-low {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 20px;
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: var(--primary);
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.search-container {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+/* ================= HERA KURTI'S CODE ENDS HERE ================= */
+
+
+/* ================= MERT GUNES'S CODE STARTS HERE ================= */
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+footer {
+    background-color: var(--dark);
+    color: white;
+    padding: 30px 0;
+    margin-top: 50px;
+}
+
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, .3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-message {
+    display: none;
+    background-color: var(--danger);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+/* ================= MERT GUNES'S CODE ENDS HERE ================= */
+
+
+/* ================= ZANI THAQIS CODE STARTS HERE ================= */
+
+.theme-toggle {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: rotate(15deg);
+}
+
+.recent-search {
+    cursor: pointer;
+    padding: 8px 15px;
+    border-radius: 20px;
+    background-color: rgba(52, 152, 219, 0.1);
+    margin: 5px;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.recent-search:hover {
+    background-color: rgba(52, 152, 219, 0.2);
+    transform: translateY(-2px);
+}
+
+.suggestions {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.suggestion-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.suggestion-item:hover {
+    background-color: #f5f5f5;
+}
+
+@media (max-width: 768px) {
+    .temperature {
+        font-size: 3rem;
+    }
+
+    .weather-icon {
+        font-size: 4rem;
+    }
+
+    .current-weather {
+        text-align: center;
+    }
+}
+/* ================= ZANI THAQI'S CODE ENDS HERE ================= */
